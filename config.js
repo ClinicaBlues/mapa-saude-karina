@@ -7,7 +7,8 @@
 
 window.MAPA_CONFIG = {
 
-  // WhatsApp que RECEBE o mapa do paciente (só dígitos: 55 + DDD + número).
+  // WhatsApp que RECEBE o mapa quando o paciente toca em "Enviar meu mapa"
+  // (só dígitos: 55 + DDD + número).
   whatsappNumber: "553133242019",
 
   // Link de convite do grupo "Saúde em Dia com a Dra. Karina".
@@ -17,10 +18,7 @@ window.MAPA_CONFIG = {
   // Instagram da Dra. Karina
   instagramUrl: "https://www.instagram.com/drakarina.cindy/",
 
-  // ARMAZÉM CENTRAL de leads da Clínica Blues (mesmo do painel-blues).
-  storeUrl: "https://script.google.com/macros/s/AKfycby9IWx93KUdyfGjmz2WO11pssI6NZvLuRU6KaiIGN2beAPjn-CTipoBdbDmDeREFdJWUw/exec",
-  storeWriteKey: "blues-site-2026",
-
-  // Webhook opcional (Make / Zapier / n8n). Deixe "" se não usar.
-  webhookUrl: ""
+  // E-MAIL: cada mapa preenchido é enviado para supervisaobluesclinic@gmail.com
+  // pelo Web3Forms (mesma chave dos sites da Dra. Rafaella e do Dr. Rafael).
+  web3formsKey: "342db1dc-62d0-47e7-bd05-5ef34c02ea99"
 };

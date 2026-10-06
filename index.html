@@ -332,31 +332,35 @@ function showResult(R){
   $("#r-insta").href = CFG.instagramUrl || "https://www.instagram.com/drakarina.cindy/";
 }
 
-/* ------------------------- envio do lead ------------------------- */
+/* ------------------------- envio por e-mail (Web3Forms) ------------------------- */
 function label(id, v){ const q = Q.find(x => x.id===id); if(!q||!q.o) return v; const f = arr => arr.map(x => (q.o.find(o => o[0]===x)||[x,x])[1]).join(", "); return Array.isArray(v) ? f(v) : f([v]); }
 function saveLead(R){
-  const now = new Date().toISOString();
+  if(!CFG.web3formsKey) return;
   const st = {g:"Em dia", y:"Atenção", r:"Prioridade"};
-  const resumo = [
-    "Idade: " + label("idade",A.idade), "Última consulta: " + label("consulta",A.consulta),
-    "Condições: " + label("numeros",A.numeros||[]), "Família: " + label("familia",A.familia),
-    "Sintomas: " + label("sintomas",A.sintomas||[]), "Fuma: " + label("fumo",A.fumo),
-    "Exercício: " + label("ativ",A.ativ), "Peso: " + label("peso",A.peso), "Qualidade de vida: " + A.qv + "/5",
-    "Mapa: " + R.areas.map(a => a.k + " " + st[a.lv]).join(" | ")
-  ].join(" · ");
-  const lead = {
-    leadId: "mapa-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-    status: "NOVO LEAD", name: A.nome, phone: A.tel, phoneDigits: digits(A.tel),
-    careLine: "cardiologia", careLineLabel: "Cardiologia · Dra. Karina · Mapa da Saúde (prioridade " + R.prioridade + ")",
-    careLineCount: 1, coupon: "", couponValid: false, benefitValue: 0, commissionValue: 0, partnerName: "", partnerSlug: "",
-    consent: true, utm_source: utm("source"), utm_medium: utm("medium"), utm_campaign: utm("campaign"), utm_content: utm("content"), utm_term: utm("term"),
-    pageUrl: location.href, referrer: document.referrer, sessionId: "", userAgent: navigator.userAgent,
-    origin: "Mapa da Saúde · Dra. Karina Cindy", createdAt: now, updatedAt: now,
-    duplicateFlag: false, duplicateNote: "",
-    priority: R.prioridade, mapLevel: st[R.level], answers: resumo
+  const payload = {
+    access_key: CFG.web3formsKey,
+    subject: "Mapa da Saúde · Dra. Karina · Prioridade " + R.prioridade + " · " + A.nome,
+    from_name: "Mapa da Saúde · Dra. Karina Cindy",
+    "Nome": A.nome,
+    "WhatsApp": A.tel,
+    "Prioridade para contato": R.prioridade,
+    "Resultado do mapa": st[R.level],
+    "Mapa por área": R.areas.map(a => a.k + ": " + st[a.lv]).join(" | "),
+    "Idade": label("idade",A.idade),
+    "Última consulta com cardiologista": label("consulta",A.consulta),
+    "Pressão, colesterol, glicose": label("numeros",A.numeros||[]),
+    "Histórico familiar": label("familia",A.familia),
+    "Sintomas": label("sintomas",A.sintomas||[]),
+    "Fuma": label("fumo",A.fumo),
+    "Exercício": label("ativ",A.ativ),
+    "Peso": label("peso",A.peso),
+    "Qualidade de vida": A.qv + "/5",
+    "Autorizou contato (LGPD)": A.lgpd ? "Sim" : "Não",
+    "Origem": [utm("source"), utm("medium"), utm("campaign")].filter(Boolean).join(" / ") || "direto",
+    "Data": new Date().toLocaleString("pt-BR"),
+    botcheck: ""
   };
-  if(CFG.storeUrl){ try{ fetch(CFG.storeUrl, {method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify({action:"create", key: CFG.storeWriteKey||"", lead}), keepalive:true}).catch(()=>{}); }catch(e){} }
-  if(CFG.webhookUrl){ try{ fetch(CFG.webhookUrl, {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(lead), keepalive:true}).catch(()=>{}); }catch(e){} }
+  try{ fetch("https://api.web3forms.com/submit", {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}, body: JSON.stringify(payload), keepalive:true}).catch(()=>{}); }catch(e){}
 }
 })();
 </script>
