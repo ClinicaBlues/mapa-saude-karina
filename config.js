@@ -13,7 +13,7 @@ window.MAPA_CONFIG = {
 
   // Link de convite do grupo "Saúde em Dia com a Dra. Karina".
   // Deixe "" enquanto o grupo não existir: o botão some sozinho.
-  grupoUrl: "",
+  grupoUrl: "https://chat.whatsapp.com/Kb2fgcP2T5VJhLh9Mnut4L",
 
   // Instagram da Dra. Karina
   instagramUrl: "https://www.instagram.com/drakarina.cindy/",
